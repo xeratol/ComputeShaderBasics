@@ -1,0 +1,46 @@
+﻿#pragma kernel GroupIndex
+#pragma kernel GroupID
+#pragma kernel GroupThreadID
+#pragma kernel DispatchThreadID
+
+uint2 imageDimensions;
+uint3 numGroups;
+RWTexture2D<float4> Result;
+
+[numthreads(32, 32, 1)]
+void GroupIndex(uint3 id : SV_DispatchThreadID, uint groupIndex : SV_GroupIndex)
+{
+    uint totalNumThreadsInGroup = 32 * 32 * 1;
+    Result[id.xy] = float4(groupIndex / totalNumThreadsInGroup,
+        groupIndex / totalNumThreadsInGroup,
+        groupIndex / totalNumThreadsInGroup,
+        0.0);
+}
+
+[numthreads(32, 32, 1)]
+void GroupID(uint3 id : SV_DispatchThreadID, uint3 groupID : SV_GroupID)
+{
+    Result[id.xy] = float4(groupID.x / numGroups.x,
+        groupID.y / numGroups.y,
+        0.0 / numGroups.z,
+        0.0);
+}
+
+[numthreads(32, 32, 1)]
+void GroupThreadID(uint3 id : SV_DispatchThreadID, uint3 groupThreadId : SV_GroupThreadID)
+{
+    uint3 numThreadsPerGroup = uint3(32, 32, 1);
+    Result[id.xy] = float4(groupThreadId.x / numThreadsPerGroup.x,
+        groupThreadId.y / numThreadsPerGroup.y,
+        0.0 / numThreadsPerGroup.z,
+        0.0);
+}
+
+[numthreads(32, 32, 1)]
+void DispatchThreadID (uint3 id : SV_DispatchThreadID)
+{
+    Result[id.xy] = float4(id.x / imageDimensions.x,
+        id.y / imageDimensions.y,
+        0.0,
+        0.0);
+}
