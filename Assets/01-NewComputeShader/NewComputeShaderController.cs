@@ -34,10 +34,4 @@ public class NewComputeShaderController : MonoBehaviour
         _texture.Release();
         _texture = null;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

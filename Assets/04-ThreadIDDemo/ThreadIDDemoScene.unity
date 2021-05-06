@@ -318,7 +318,7 @@ GameObject:
   - component: {fileID: 767366730}
   - component: {fileID: 767366729}
   m_Layer: 0
-  m_Name: ThreadIDDemoController
+  m_Name: Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
