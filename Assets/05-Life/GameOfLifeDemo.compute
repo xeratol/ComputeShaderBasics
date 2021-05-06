@@ -1,0 +1,67 @@
+﻿#pragma kernel Step
+#pragma kernel Draw
+
+int WIDTH;
+int HEIGHT;
+RWStructuredBuffer<uint> Life;
+RWTexture2D<float4> Result;
+
+[numthreads(8,8,1)]
+void Step(uint3 id : SV_DispatchThreadID)
+{
+    int neighborsAlive = 0;
+    for (int dx = -1; dx <= 1; ++dx)
+    {
+        for (int dy = -1; dy <= 1; ++dy)
+        {
+            int x = id.x + dx;
+            if (x < 0)
+            {
+                x += WIDTH;
+            }
+            else if (x >= WIDTH)
+            {
+                x -= WIDTH;
+            }
+
+            int y = id.y + dy;
+            if (y < 0)
+            {
+                y += HEIGHT;
+            }
+            else if (y >= HEIGHT)
+            {
+                y -= HEIGHT;
+            }
+
+            if (Life[y * WIDTH + x] > 0)
+            {
+                neighborsAlive++;
+            }
+        }
+    }
+
+    int self = Life[id.y * WIDTH + id.x];
+    if (self > 0)
+    {
+        neighborsAlive--;
+    }
+
+    if (neighborsAlive < 2 || neighborsAlive > 3)
+    {
+        self = 0;
+    }
+    else if (neighborsAlive == 3)
+    {
+        self = 1;
+    }
+
+    Life[id.y * WIDTH + id.x] = self;
+}
+
+[numthreads(8, 8, 1)]
+void Draw(uint3 id : SV_DispatchThreadID)
+{
+    float val = Life[id.y * WIDTH + id.x];
+    Result[id.xy] = float4(val, val, val, 1);
+}
