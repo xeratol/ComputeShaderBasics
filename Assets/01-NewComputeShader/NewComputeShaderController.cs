@@ -12,15 +12,12 @@ public class NewComputeShaderController : MonoBehaviour
 
     private RenderTexture _texture = null;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         _texture = new RenderTexture(32, 32, 24);
         _texture.filterMode = FilterMode.Point;
         _texture.enableRandomWrite = true; // IMPORTANT!
         _texture.Create();
-
-        Debug.Assert(_texture != null, "Failed to create Render Texture", this);
 
         _material.mainTexture = _texture;
 
